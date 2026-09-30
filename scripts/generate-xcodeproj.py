@@ -12,7 +12,7 @@ PROJECT_ID = sha1(b"project:ArcanjoDev").hexdigest()[:24].upper()
 # Pinned to the APIs used by MLX Swift LM 3.31.4 and its published SPM manifest.
 # Format: (package URL, exact semver, product names)
 PACKAGES = [
-    ("https://github.com/ml-explore/mlx-swift-lm", "3.31.4", ["MLXLLM", "MLXLMCommon", "MLXHuggingFace"]),
+    ("https://github.com/ml-explore/mlx-swift-lm", "3.31.4", ["MLXLLM", "MLXLMCommon", "MLXHuggingFace", "MLXHuggingFaceMacros"]),
     ("https://github.com/ml-explore/mlx-swift", "0.31.4", ["MLX"]),
     ("https://github.com/huggingface/swift-huggingface", "0.9.0", ["HuggingFace"]),
     ("https://github.com/huggingface/swift-transformers", "1.3.0", ["Tokenizers"]),
