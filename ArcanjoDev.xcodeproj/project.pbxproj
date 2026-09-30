@@ -129,7 +129,7 @@
 		A9497CE23FDDC0787512981E /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)";
 		IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 		SDKROOT = iphoneos;
-		SWIFT_VERSION = 5.0;
+		SWIFT_VERSION = 6.0;
 		SWIFT_STRICT_CONCURRENCY = targeted;
 		TARGETED_DEVICE_FAMILY = 1;
 		SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -140,7 +140,7 @@
 		A9DD297AC466B8C891118663 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)";
 		IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 		SDKROOT = iphoneos;
-		SWIFT_VERSION = 5.0;
+		SWIFT_VERSION = 6.0;
 		SWIFT_STRICT_CONCURRENCY = targeted;
 		TARGETED_DEVICE_FAMILY = 1;
 		SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -150,7 +150,7 @@
 		6FC7F6F4E3B6174A48BFB0BF /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)";
 		IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 		SDKROOT = iphoneos;
-		SWIFT_VERSION = 5.0;
+		SWIFT_VERSION = 6.0;
 		SWIFT_STRICT_CONCURRENCY = targeted;
 		TARGETED_DEVICE_FAMILY = 1;
 		SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -169,7 +169,7 @@
 		21BDFEB74CA76E8D424C954F /* Release */ = {isa = XCBuildConfiguration; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)";
 		IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 		SDKROOT = iphoneos;
-		SWIFT_VERSION = 5.0;
+		SWIFT_VERSION = 6.0;
 		SWIFT_STRICT_CONCURRENCY = targeted;
 		TARGETED_DEVICE_FAMILY = 1;
 		SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -187,7 +187,7 @@
 		8D8E22FB71B0150CE152240B /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)";
 		IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 		SDKROOT = iphoneos;
-		SWIFT_VERSION = 5.0;
+		SWIFT_VERSION = 6.0;
 		SWIFT_STRICT_CONCURRENCY = targeted;
 		TARGETED_DEVICE_FAMILY = 1;
 		SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -201,7 +201,7 @@
 		53AB112F3F14B3BF304F627C /* Release */ = {isa = XCBuildConfiguration; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)";
 		IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 		SDKROOT = iphoneos;
-		SWIFT_VERSION = 5.0;
+		SWIFT_VERSION = 6.0;
 		SWIFT_STRICT_CONCURRENCY = targeted;
 		TARGETED_DEVICE_FAMILY = 1;
 		SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
