@@ -38,6 +38,10 @@ jobs:
           test -f ArcanjoDev.xcodeproj/xcshareddata/xcschemes/ArcanjoDev.xcscheme
           xcodebuild -project ArcanjoDev.xcodeproj -scheme ArcanjoDev -list
 
+      - name: Enable Swift macros for CI
+        shell: bash
+        run: defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
+
       - name: Cache Swift Package Manager dependencies
         uses: actions/cache@v4
         with:
