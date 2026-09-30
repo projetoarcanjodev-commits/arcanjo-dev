@@ -1,0 +1,126 @@
+name: iOS Build and XCTest
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test on macOS
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select and validate Xcode
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "${XCODE_VERSION:-}" && -d "/Applications/Xcode_${XCODE_VERSION}.app" ]]; then
+            sudo xcode-select --switch "/Applications/Xcode_${XCODE_VERSION}.app"
+          fi
+          xcode-select --install 2>/dev/null || true
+          xcodebuild -version
+          xcode-select -p
+          test -d ArcanjoDev.xcodeproj
+          test -f ArcanjoDev.xcodeproj/project.pbxproj
+          test -f ArcanjoDev.xcodeproj/xcshareddata/xcschemes/ArcanjoDev.xcscheme
+          xcodebuild -project ArcanjoDev.xcodeproj -scheme ArcanjoDev -list
+
+      - name: Cache Swift Package Manager dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .ci/SourcePackages
+            ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-${{ runner.arch }}-xcode-spm-${{ hashFiles('ArcanjoDev.xcodeproj/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-xcode-spm-
+
+      - name: Resolve Swift Package Manager dependencies
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .ci/SourcePackages
+          xcodebuild \
+            -resolvePackageDependencies \
+            -project ArcanjoDev.xcodeproj \
+            -scheme ArcanjoDev \
+            -clonedSourcePackagesDirPath "$PWD/.ci/SourcePackages" \
+            2>&1 | tee .ci/resolve-packages.log
+
+      - name: Select an available iOS simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          simulator_id="$(python3 - <<'PY'
+          import json
+          import subprocess
+          data = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))
+          preferred = ("iPhone 16 Pro", "iPhone 16", "iPhone 15 Pro", "iPhone 15")
+          devices = [
+              device
+              for runtime_devices in data.get("devices", {}).values()
+              for device in runtime_devices
+              if device.get("isAvailable") is True and device.get("name", "").startswith("iPhone")
+          ]
+          devices.sort(key=lambda device: (preferred.index(device["name"]) if device["name"] in preferred else len(preferred), device["name"]))
+          if not devices:
+              raise SystemExit("Nenhum simulador iPhone compatível está disponível no runner.")
+          print(devices[0]["udid"])
+          PY
+          )"
+          echo "SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"
+          xcrun simctl boot "$simulator_id" 2>/dev/null || true
+          xcrun simctl bootstatus "$simulator_id" -b
+          xcrun simctl list devices available | grep -F "$simulator_id" || true
+
+      - name: Build ArcanjoDev for iOS Simulator
+        shell: bash
+        run: |
+          set -o pipefail
+          xcodebuild \
+            build \
+            -project ArcanjoDev.xcodeproj \
+            -scheme ArcanjoDev \
+            -destination "id=$SIMULATOR_ID" \
+            -clonedSourcePackagesDirPath "$PWD/.ci/SourcePackages" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            2>&1 | tee .ci/build.log
+
+      - name: Run XCTest on iOS Simulator
+        shell: bash
+        run: |
+          set -o pipefail
+          xcodebuild \
+            test \
+            -project ArcanjoDev.xcodeproj \
+            -scheme ArcanjoDev \
+            -destination "id=$SIMULATOR_ID" \
+            -clonedSourcePackagesDirPath "$PWD/.ci/SourcePackages" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            2>&1 | tee .ci/test.log
+
+      - name: Upload Xcode logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcode-logs-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            .ci/*.log
+            ~/Library/Logs/DiagnosticReports/*
+            ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/*.xcresult
