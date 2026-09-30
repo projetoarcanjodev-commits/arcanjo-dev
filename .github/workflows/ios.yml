@@ -16,7 +16,7 @@ concurrency:
 jobs:
   build-and-test:
     name: Build and test on macOS
-    runs-on: macos-15
+    runs-on: macos-14
     timeout-minutes: 60
 
     steps:
