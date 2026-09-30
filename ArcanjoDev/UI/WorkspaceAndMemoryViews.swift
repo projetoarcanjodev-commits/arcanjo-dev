@@ -136,6 +136,6 @@ public struct MemoryView: View {
                 loaded.append(MemoryBucketSnapshot(name: bucket.rawValue, events: try await memory.readAll(from: bucket)))
             }
             buckets = loaded
-        } catch { error = error.localizedDescription }
+        } catch let caught { error = caught.localizedDescription }
     }
 }
