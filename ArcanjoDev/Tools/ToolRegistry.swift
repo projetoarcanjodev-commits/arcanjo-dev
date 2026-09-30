@@ -96,7 +96,7 @@ public final class WorkspaceToolSet: @unchecked Sendable {
     public func install(into registry: ToolRegistry) async {
         await registry.register(.init(
             id: "workspace.list", description: "Lista arquivos do workspace local sem retornar pastas ocultas.",
-            inputSchema: "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\"}},\"additionalProperties\":false}", risk: .readOnly, requiresApproval: false
+            inputSchema: "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\"}},\"additionalProperties\":false}", risk: .readOnly, requiresApproval: false, approvalText: nil
         )) { [self] args in
             guard Set(args.keys).isSubset(of: Set(["path"])) else { throw ToolExecutionError.invalidArguments("workspace.list aceita somente path") }
             let relative: String
@@ -120,7 +120,7 @@ public final class WorkspaceToolSet: @unchecked Sendable {
 
         await registry.register(.init(
             id: "workspace.read", description: "Lê um arquivo de texto do workspace (máximo 512 KiB).",
-            inputSchema: "{\"type\":\"object\",\"required\":[\"path\"],\"properties\":{\"path\":{\"type\":\"string\"}},\"additionalProperties\":false}", risk: .readOnly, requiresApproval: false
+            inputSchema: "{\"type\":\"object\",\"required\":[\"path\"],\"properties\":{\"path\":{\"type\":\"string\"}},\"additionalProperties\":false}", risk: .readOnly, requiresApproval: false, approvalText: nil
         )) { [self] args in
             guard Set(args.keys) == Set(["path"]) else { throw ToolExecutionError.invalidArguments("workspace.read exige somente path") }
             let file = try secureURL(requiredString(args, "path"), mustExist: true)
@@ -161,7 +161,7 @@ public final class WorkspaceToolSet: @unchecked Sendable {
 
         await registry.register(.init(
             id: "workspace.validate", description: "Valida sintaxe local de JSON ou Property List (.plist/.xml), sem executar código.",
-            inputSchema: "{\"type\":\"object\",\"required\":[\"path\"],\"properties\":{\"path\":{\"type\":\"string\"}},\"additionalProperties\":false}", risk: .readOnly, requiresApproval: false
+            inputSchema: "{\"type\":\"object\",\"required\":[\"path\"],\"properties\":{\"path\":{\"type\":\"string\"}},\"additionalProperties\":false}", risk: .readOnly, requiresApproval: false, approvalText: nil
         )) { [self] args in
             guard Set(args.keys) == Set(["path"]) else { throw ToolExecutionError.invalidArguments("workspace.validate exige somente path") }
             let path = try requiredString(args, "path")
@@ -186,7 +186,7 @@ public final class WorkspaceToolSet: @unchecked Sendable {
             inputSchema: "{\"type\":\"object\",\"required\":[\"url\"],\"properties\":{\"url\":{\"type\":\"string\"}},\"additionalProperties\":false}", risk: .externalSideEffect, requiresApproval: true, approvalText: "Esta ação envia uma requisição GET sem conteúdo nem credenciais para o endereço solicitado. Confira a URL e o host."
         )) { [session] args in
             guard Set(args.keys) == Set(["url"]) else { throw ToolExecutionError.invalidArguments("web.fetch exige somente url") }
-            let rawURL = try requiredString(args, "url")
+            let rawURL = try self.requiredString(args, "url")
             guard let url = URL(string: rawURL), url.scheme?.lowercased() == "https", let host = url.host, url.user == nil, url.password == nil, Self.isPublicHost(host) else {
                 throw ToolExecutionError.invalidArguments("web.fetch aceita somente URL HTTPS pública")
             }
