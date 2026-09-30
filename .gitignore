@@ -1,0 +1,27 @@
+# Xcode products and caches
+DerivedData/
+.build/
+*.xcuserstate
+xcuserdata/
+*.ipa
+*.app/
+*.dSYM/
+
+# Local environment and secrets
+.env
+.env.*
+*.p8
+*.mobileprovision
+
+# Model weights (import them in the app, never commit them)
+*.gguf
+*.safetensors
+*.mlx
+*.bin
+
+# Python test cache
+__pycache__/
+*.py[cod]
+
+# GitHub Actions local logs and Swift package cache
+.ci/
