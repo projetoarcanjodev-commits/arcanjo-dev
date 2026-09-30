@@ -16,7 +16,7 @@ concurrency:
 jobs:
   build-and-test:
     name: Build and test on macOS
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 60
 
     steps:
@@ -100,6 +100,7 @@ jobs:
             -scheme ArcanjoDev \
             -destination "id=$SIMULATOR_ID" \
             -clonedSourcePackagesDirPath "$PWD/.ci/SourcePackages" \
+            ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             2>&1 | tee .ci/build.log
@@ -114,6 +115,7 @@ jobs:
             -scheme ArcanjoDev \
             -destination "id=$SIMULATOR_ID" \
             -clonedSourcePackagesDirPath "$PWD/.ci/SourcePackages" \
+            ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             2>&1 | tee .ci/test.log
